@@ -13,3 +13,6 @@ images/
 .DS_Store
 Thumbs.db
 *.log
+
+# Project-Docs
+docs/

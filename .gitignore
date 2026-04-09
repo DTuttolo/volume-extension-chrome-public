@@ -1,0 +1,15 @@
+# Release artifacts
+dist/
+*.zip
+*.tar.gz
+
+# Local screenshot/export assets
+images/
+
+# Windows alternate data stream files (seen in WSL checkouts)
+*:Zone.Identifier
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.log

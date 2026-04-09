@@ -1,0 +1,228 @@
+Extensions can access the same [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) as web pages. To become an expert in debugging extensions, you will need to know how to locate logs and errors of the different extension components. This tutorial provides fundamental techniques for debugging your extension.
+
+[Video](https://www.youtube.com/watch?v=Ta-YTDhiBIQ)
+
+## Before you begin
+
+This guide assumes that you have basic web development experience. We recommend reading
+[Development Basics](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) for an introduction to the extension development workflow.
+[Design the user interface](https://developer.chrome.com/docs/extensions/develop/ui) gives you an introduction to the user
+interface elements available in extensions.
+
+## Break the extension
+
+This tutorial will break one extension component at a time and then demonstrate how to fix it. Remember to undo the bugs introduced in one section before continuing to the next section. Start by downloading the [Broken Color sample](https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/functional-samples/tutorial.broken-color) on GitHub.
+
+### Debug the manifest
+
+First, let's break the manifest file by changing the `"version"` key to `"versions"`:
+
+manifest.json:
+
+    {
+      "name": "Broken Background Color",
+      "version": "1.0",
+      "versions": "1.0",
+      "description": "Fix an Extension!",
+      ...
+    }
+
+Now let's try [loading the extension locally](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked). You will see an error dialog box pointing to the problem:
+
+    Failed to load extension
+    Required value version is missing or invalid. It must be between 1-4 dot-separated integers each between 0 and 65536.
+    Could not load manifest.
+
+![An extension with an invalid manifest key triggering an error dialog when attempting to load.](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/an-extension-an-invalid-9ab91f867f94c.png) An invalid manifest key error dialog.
+
+When a manifest key is invalid the extension fails to load, but Chrome gives you a hint of
+how to fix the problem.
+
+Undo that change and enter an invalid permission to see what happens.
+Change the `"activeTab"` permission to lowercase `"activetab"`:
+
+manifest.json:
+
+    {
+      ...
+      "permissions": ["activeTab", "scripting", "storage"],
+      "permissions": \["activetab", "scripting", "storage"\],
+      ...
+    }
+
+Save the extension and try loading it again. It should load successfully this time. In the extension
+Management page you will see three buttons: **Details** , **Remove** and **Errors** . The **Errors**
+button label turns red when there's an error. Click the **Errors** button to see the
+following error:
+
+    Permission 'activetab' is unknown or URL pattern is malformed.
+
+![Error button is clicked and displays an error](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/error-button-is-clicked-a7713a11553a.gif) Finding an error message by clicking the Errors button.
+
+Before moving on, change the permission back, click **Clear all** in the upper right-hand corner to clear the logs, and reload the extension.
+![Clear all button](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/clear-button-2f67dd9230519.png) How to clear extension errors.
+
+> [!NOTE]
+> **Note:** Using a [manifest schema](https://json.schemastore.org/chrome-manifest) in your code editor is a way to ensure that the manifest has the proper formatting and required fields.
+
+### Debug the service worker
+
+#### Locating logs
+
+The service worker sets the default color to storage and logs it to the console. To view this log, open the Chrome DevTools panel by selecting the blue link next to **Inspect views**.
+![Opening the DevTools for the extension service worker.](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/opening-devtools-the-ex-685e204e20773.png) Service worker logs in the Chrome DevTools panel.
+
+> [!IMPORTANT]
+> **Key point:** Inspecting the service worker keeps it active. To ensure your extension behaves correctly when your service worker is terminated, remember to close DevTools.
+
+#### Locating errors
+
+Let's break the service worker by changing `onInstalled` to lowercase `oninstalled`:
+
+service-worker.js:
+
+    // There's a typo in the line below;
+    // ❌ oninstalled should be ✅ onInstalled.
+    chrome.runtime.onInstalled.addListener(() => {
+    chrome.runtime.oninstalled.addListener(() =\> {
+      chrome.storage.sync.set({ color: '#3aa757' }, () => {
+        console.log('The background color is green.');
+      });
+    });
+
+Refresh and click **Errors** to view the error log. The first error lets you know that the service worker failed to register. This means something went wrong during initiation:
+
+    Service worker registration failed. Status code: 15.
+
+![Service worker registration failed. Status code: 15 error message](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/service-worker-registrati-9791df79120e6.png) Service worker registration error message.
+
+> [!NOTE]
+> **Note:** If the service worker fails to register, you will not be able to access Chrome DevTools until you fix the registration bug.
+
+The actual error comes after:
+
+    Uncaught TypeError: Cannot read properties of undefined (reading 'addListener')
+
+![Uncaught TypeError: Cannot read properties of undefined error message](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/uncaught-typeerror-canno-45ae014961338.png) Uncaught TypeError message.
+
+Undo the bug we introduced, click **Clear all** in the upper right-hand corner, and reload the extension.
+
+#### Check the service worker status
+
+You can identify when the service worker wakes up to perform tasks by following these steps:
+
+1. Copy your extension ID located above "Inspect views". ![Extension ID in the Extensions Management page](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/extension-id-the-extensi-1a615e29e13bb.png) Extension ID in the Extensions Management page.
+2. Open your manifest file in the browser. For example:
+
+       chrome-extension://YOUR_EXTENSION_ID/manifest.json
+
+3. Inspect the file.
+
+4. Navigate to the **Application** panel.
+
+5. Go to the **Service Workers** pane.
+
+To test your code, start or stop the service worker using the links next to **status**.
+[![Service worker status in the Application panel](https://developer.chrome.com/docs/extensions/get-started/tutorial/debug/image/start-stop-service-worker.png?auto=format&w=845)](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/start-stop-service-worker.png) Service worker status in the Application panel. (Click to enlarge the image.)
+
+### Debug the popup
+
+Now that the extension initializes correctly, let's break the popup by commenting out the highlighted lines below:
+
+popup.js:
+
+    ...
+    changeColorButton.addEventListener('click', (event) => {
+      const color = event.target.value;
+
+      // Query the active tab before injecting the content script
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) =\> {
+        // Use the Scripting API to execute a script
+        chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          args: [color],
+          func: setColor
+        });
+     });
+    });
+
+Navigate back to the Extensions Management page. The **Errors** button reappears. Click it to
+view the new log. It shows the following error message:
+
+    Uncaught ReferenceError: tabs is not defined
+
+![Extensions Management page displaying popup error](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/extensions-management-pag-00a0f48a76239.png) Extensions Management page displaying popup error.
+
+You can open the popup's DevTools by inspecting the popup.
+![DevTools displaying popup error.](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/devtools-displaying-popup-0ed24fd80361a.png) DevTools displaying popup error.
+
+The error, `tabs is undefined`, says the extension doesn't know where to inject the content script.
+Correct this by calling [`tabs.query()`](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-query), then selecting the active tab.
+
+To update the code, click the **Clear all** button in the upper right-hand corner, and then reload the
+extension.
+
+> [!NOTE]
+> **Note:** For other extension pages displayed as a tab, such as [override pages](https://developer.chrome.com/docs/extensions/develop/ui/override-chrome-pages) and [full-page options](https://developer.chrome.com/docs/extensions/develop/ui/options-page#full_page), you can find logs by inspecting the page or by visiting the Extensions Management page.
+
+### Debug content scripts
+
+Now let's break the content script by changing the variable "color" to "colors":
+
+content.js:
+
+    ...
+    function setColor(color) {
+      // There's a typo in the line below;
+      // ❌ colors should be ✅ color.
+      document.body.style.backgroundColor = color;
+      document.body.style.backgroundColor = colors;
+    }
+
+Refresh the page, open the popup and click the green box. Nothing happens.
+
+If you go to the Extensions Management page the **Errors** button does not appear. This is because only runtime errors, `console.warning` and,
+`console.error` are recorded on the Extensions Management page.
+
+[Content scripts](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts) run inside a website. So to find these errors we must inspect the web page the extension is trying to alter:
+
+    Uncaught ReferenceError: colors is not defined
+
+![Extension error displayed in web page console](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/extension-error-displayed-ca9d8c6c336b.png) Extension error displayed in web page console.
+
+To use DevTools from within the content script, click the dropdown arrow next to **top** and select the extension.
+![Uncaught ReferenceError: colors is not defined](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/uncaught-referenceerror-e5847be3a7de9.png) Uncaught ReferenceError: colors is not defined.
+
+The error says `colors` is not defined. The extension must not be passing the variable correctly.
+Correct the injected script to pass the color variable into the code.
+
+## Monitor network requests
+
+The popup often makes all of the required network requests before even the speediest of
+developers can open DevTools. To view these requests, refresh from inside the network panel. It
+reloads the popup without closing the DevTools panel.
+![Refresh inside the network panel to view popup network requests](https://developer.chrome.com/static/docs/extensions/get-started/tutorial/debug/image/refresh-inside-network-p-43993068e650e.gif) Refresh inside the network panel to view popup network requests.
+
+## Declare permissions
+
+Some extension APIs
+require permissions. Refer to the [permissions](https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions) article and the [Chrome
+APIs](https://developer.chrome.com/docs/extensions/reference/api) to ensure an extension is requesting the correct permissions in the [manifest](https://developer.chrome.com/docs/extensions/reference/manifest).
+
+      {
+        "name": "Broken Background Color",
+        ...
+        "permissions": [
+          "activeTab",
+          "declarativeContent",
+          "storage"
+        ],
+      ...
+      }
+
+> [!IMPORTANT]
+> **Key point:** To make `fetch()` calls to an external server, you must declare the URL as a [host permission](https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns).
+
+## Further reading
+
+Learn more about [Chrome Devtools](https://developers.google.com/web/tools/chrome-devtools/) by reading the documentation.

@@ -1,0 +1,360 @@
+Skip to main content
+Skip to search
+
+HTML
+
+CSS
+
+JavaScript
+
+Web APIs
+
+All
+
+Learn
+
+Tools
+
+About
+Blog
+
+Log in
+Web
+Web APIs
+Window
+localStorage
+
+Theme
+
+English (US)
+Window: localStorage property
+Baseline Widely available
+The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions.
+
+localStorage is similar to sessionStorage, except that while localStorage data has no expiration time, sessionStorage data gets cleared when the page session ends — that is, when the page is closed. (localStorage data for a document loaded in a "private browsing" or "incognito" session is cleared when the last "private" tab is closed.)
+
+In this article
+Value
+Description
+Examples
+Specifications
+Browser compatibility
+See also
+Value
+A Storage object which can be used to access the current origin's local storage space.
+
+Exceptions
+SecurityError
+Thrown in one of the following cases:
+
+The origin is not a valid scheme/host/port tuple. This can happen if the origin uses the file: or data: schemes, for example.
+The request violates a policy decision. For example, the user has configured the browsers to prevent the page from persisting data.
+Note that if the user blocks cookies, browsers will probably interpret this as an instruction to prevent the page from persisting data.
+
+Description
+The keys and the values stored with localStorage are in the UTF-16 string format. As with objects, integer keys are automatically converted to strings.
+
+localStorage data is specific to the protocol of the document. In particular, for a site loaded over HTTP (e.g., http://example.com), localStorage returns a different object than localStorage for the corresponding site loaded over HTTPS (e.g., https://example.com).
+
+For documents loaded from file: URLs (that is, files opened in the browser directly from the user's local filesystem, rather than being served from a web server) the requirements for localStorage behavior are undefined and may vary among different browsers.
+
+In all current browsers, localStorage seems to return a different object for each file: URL. In other words, each file: URL seems to have its own unique local-storage area. But there are no guarantees about that behavior, so you shouldn't rely on it because, as mentioned above, the requirements for file: URLs remain undefined. So it's possible that browsers may change their file: URL handling for localStorage at any time. In fact some browsers have changed their handling for it over time.
+
+Examples
+The following snippet accesses the current domain's local Storage object and adds a data item to it using Storage.setItem().
+
+js
+
+Copy
+localStorage.setItem("myCat", "Tom");
+The syntax for reading the localStorage item is as follows:
+
+js
+
+Copy
+const cat = localStorage.getItem("myCat");
+The syntax for removing the localStorage item is as follows:
+
+js
+
+Copy
+localStorage.removeItem("myCat");
+The syntax for removing all the localStorage items is as follows:
+
+js
+
+Copy
+localStorage.clear();
+Note: Please refer to the Using the Web Storage API article for a full example.
+
+Specifications
+Specification
+HTML
+# dom-localstorage-dev
+Browser compatibility
+Report problems with this compatibility data • View data on GitHub
+desktop
+mobile
+server
+Chrome
+Edge
+Firefox
+Opera
+Safari
+Chrome Android
+Firefox for Android
+Opera Android
+Safari on iOS
+Samsung Internet
+WebView Android
+WebView on iOS
+Deno
+localStorage
+
+4
+
+12
+
+3.5
+
+10.5
+
+4
+
+18
+
+4
+
+11
+
+3.2
+
+1
+
+4.4
+
+3.2
+
+1.16
+footnote
+Legend
+Tip: you can click/tap on a cell for more information.
+
+Full support
+Full support
+See implementation notes.
+See also
+Using the Web Storage API
+Window.sessionStorage
+Help improve MDN
+
+Was this page helpful to you?
+
+Yes
+
+No
+Learn how to contribute
+This page was last modified on Nov 30, 2025 by MDN contributors.
+
+View this page on GitHub • Report a problem with this content
+Filter sidebar
+Filter
+Web Storage API
+Window
+Instance properties
+caches
+closed
+cookieStore
+credentiallessExperimental
+crossOriginIsolated
+crypto
+customElements
+devicePixelRatio
+document
+documentPictureInPictureExperimental
+eventDeprecated
+externalDeprecated
+fenceExperimental
+frameElement
+frames
+fullScreenNon-standard
+history
+indexedDB
+innerHeight
+innerWidth
+isSecureContext
+launchQueueExperimental
+length
+localStorage
+location
+locationbar
+menubar
+mozInnerScreenXNon-standard
+mozInnerScreenYNon-standard
+name
+navigation
+navigator
+opener
+orientationDeprecated
+origin
+originAgentCluster
+outerHeight
+outerWidth
+parent
+performance
+personalbar
+scheduler
+screen
+screenLeft
+screenTop
+screenX
+screenY
+scrollbars
+scrollMaxXNon-standard
+scrollMaxYNon-standard
+scrollX
+scrollY
+self
+sessionStorage
+sharedStorageDeprecated
+speechSynthesis
+statusDeprecated
+statusbar
+toolbar
+top
+trustedTypes
+viewportExperimental
+visualViewport
+window
+Instance methods
+alert()
+atob()
+blur()Deprecated
+btoa()
+cancelAnimationFrame()
+cancelIdleCallback()
+captureEvents()Deprecated
+clearImmediate()Non-standardDeprecated
+clearInterval()
+clearTimeout()
+close()
+confirm()
+createImageBitmap()
+dump()Non-standard
+fetch()
+fetchLater()Experimental
+find()Non-standard
+focus()
+getComputedStyle()
+getDefaultComputedStyle()Non-standard
+getScreenDetails()Experimental
+getSelection()
+matchMedia()
+moveBy()
+moveTo()
+open()
+postMessage()
+print()
+prompt()
+queryLocalFonts()Experimental
+queueMicrotask()
+releaseEvents()Deprecated
+reportError()
+requestAnimationFrame()
+requestFileSystem()Non-standardDeprecated
+requestIdleCallback()
+resizeBy()
+resizeTo()
+scroll()
+scrollBy()
+scrollByLines()Non-standard
+scrollByPages()Non-standard
+scrollTo()
+setImmediate()Non-standardDeprecated
+setInterval()
+setResizable()Non-standardDeprecated
+setTimeout()
+showDirectoryPicker()Experimental
+showOpenFilePicker()Experimental
+showSaveFilePicker()Experimental
+sizeToContent()Non-standard
+stop()
+structuredClone()
+webkitConvertPointFromNodeToPage()Non-standardDeprecated
+webkitConvertPointFromPageToNode()Non-standardDeprecated
+Events
+afterprint
+appinstalled
+beforeinstallprompt
+beforeprint
+beforeunload
+blur
+devicemotion
+deviceorientation
+deviceorientationabsolute
+error
+focus
+gamepadconnected
+gamepaddisconnected
+hashchange
+languagechange
+load
+message
+messageerror
+offline
+online
+orientationchangeDeprecated
+pagehide
+pagereveal
+pageshow
+pageswap
+popstate
+rejectionhandled
+resize
+scrollsnapchangeExperimental
+scrollsnapchangingExperimental
+storage
+unhandledrejection
+unload
+vrdisplayactivateNon-standardDeprecated
+vrdisplayconnectNon-standardDeprecated
+vrdisplaydeactivateNon-standardDeprecated
+vrdisplaydisconnectNon-standardDeprecated
+vrdisplaypresentchangeNon-standardDeprecated
+Inheritance
+EventTarget
+Related pages for Web Storage API
+Storage
+StorageEvent
+Window.localStorage
+Window.sessionStorage
+Guides
+Using the Web Storage API
+Your blueprint for a better internet.
+
+MDN
+About
+Blog
+Mozilla careers
+Advertise with us
+MDN Plus
+Product help
+Contribute
+MDN Community
+Community resources
+Writing guidelines
+MDN Discord
+MDN on GitHub
+Developers
+Web technologies
+Learn web development
+Guides
+Tutorials
+Glossary
+Hacks blog
+Website Privacy Notice
+Telemetry Settings
+Legal
+Community Participation Guidelines
+Visit Mozilla Corporation’s not-for-profit parent, the Mozilla Foundation.
+Portions of this content are ©1998–2026 by individual mozilla.org contributors. Content available under a Creative Commons license.

@@ -1,0 +1,214 @@
+:root {
+    color-scheme: dark light;
+    --bg-0: #020a20;
+    --bg-1: #081739;
+    --panel: rgba(6, 18, 45, 0.88);
+    --text: #ecf1ff;
+    --muted: #b8c2e2;
+    --mint: #59f7c8;
+    --mint-2: #43cca7;
+    --line: #2f4f8e;
+    --button: #12274d;
+    --button-border: #385b9d;
+    --button-active: #325d98;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    font-family: "Sora", "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at 75% 100%, rgba(89, 247, 200, 0.28), transparent 38%),
+        radial-gradient(circle at 15% -10%, rgba(70, 128, 255, 0.28), transparent 45%),
+        linear-gradient(155deg, var(--bg-0), var(--bg-1));
+    color: var(--text);
+    padding: 12px;
+}
+
+.popup-card {
+    padding: 16px;
+    display: grid;
+    gap: 10px;
+    border: 1px solid #2c4d89;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(8, 20, 51, 0.95), rgba(5, 14, 37, 0.92));
+    box-shadow: var(--shadow), inset 0 0 0 1px rgba(132, 172, 255, 0.06);
+    width: 312px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 41px;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 800;
+    color: var(--mint);
+    font-size: 11px;
+}
+
+.theme-toggle {
+    border: 1px solid #355383;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #203a68, #13264a);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.subtitle,
+.local-note,
+.site-notice,
+.warning,
+#status {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.site-notice {
+    color: #d6e1ff;
+    min-height: 20px;
+}
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.preset-btn,
+.popout-btn {
+    border-radius: 13px;
+    border: 1px solid var(--button-border);
+    background: linear-gradient(180deg, #17315f, #102342);
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.preset-btn:hover,
+.popout-btn:hover,
+.theme-toggle:hover {
+    transform: translateY(-1px);
+    border-color: #86b9ff;
+}
+
+.preset-btn.is-active {
+    background: linear-gradient(180deg, #426fb3, var(--button-active));
+    border-color: #99cbff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.preset-btn:focus-visible,
+.popout-btn:focus-visible,
+.theme-toggle:focus-visible,
+#volumeSlider:focus-visible {
+    outline: 2px solid #9efce0;
+    outline-offset: 2px;
+}
+
+.popout-btn {
+    width: 100%;
+    border-color: var(--mint);
+    margin-top: 2px;
+}
+
+.slider-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.slider-head label,
+.slider-head span {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#volumeSlider {
+    width: 100%;
+    accent-color: #8de9ff;
+    margin: 0;
+}
+
+.slider-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.slider-fill {
+    height: 100%;
+    width: 33.33%;
+    background: linear-gradient(90deg, #53a9ff, #6ff1cc);
+    border-radius: 999px;
+    transition: width 120ms linear;
+}
+
+#status {
+    min-height: 18px;
+    color: #99f6da;
+    font-size: 12px;
+}
+
+.light-mode {
+    --bg-0: #d9ecff;
+    --bg-1: #bed8f5;
+    --text: #10213f;
+    --muted: #25436e;
+    --mint: #0d8d6f;
+    --line: #7ba0d2;
+}
+
+.light-mode .popup-card {
+    background: linear-gradient(180deg, rgba(238, 246, 255, 0.96), rgba(219, 233, 251, 0.92));
+    border-color: #88a9d8;
+}
+
+.light-mode .preset-btn,
+.light-mode .theme-toggle,
+.light-mode .popout-btn {
+    color: #11274c;
+    background: linear-gradient(180deg, #dceaff, #bfd8fb);
+    border-color: #7da2d9;
+}
+
+.light-mode .preset-btn.is-active {
+    background: linear-gradient(180deg, #79a9e9, #5688cb);
+    color: #f4f8ff;
+}
+
+.light-mode #status {
+    color: #1d6f5a;
+}

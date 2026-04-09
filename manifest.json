@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Volume Booster 300",
-    "version": "1.0.0",
+    "version": "1.0.10",
     "description": "Enhances and fine-tunes audio in the active tab, with boost support up to 300% and a convenient popout control window.",
     "icons": {
         "16": "icon.png",
